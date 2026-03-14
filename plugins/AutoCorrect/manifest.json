@@ -1,0 +1,7 @@
+{
+    "name": "AutoCorrect",
+    "description": "Autocorectare mesaje in Discord",
+    "authors": [{"name": "vegosefu", "id": "0"}],
+    "main": "index.tsx",
+    "vendetta": {"icon": "ic_edit"}
+}
