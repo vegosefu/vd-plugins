@@ -48,6 +48,9 @@ const styles = StyleSheet.create({
   btnSave: {
     backgroundColor: "#2d7d46"
   },
+  btnUpload: {
+    backgroundColor: "#4e4f58"
+  },
   btnText: {
     color: "#fff",
     fontWeight: "bold",
@@ -128,6 +131,12 @@ function JSRunnerPage() {
       });
       return;
     }
+    if (!code2.trim()) {
+      toasts.showToast("Codul e gol!", {
+        key: "warning"
+      });
+      return;
+    }
     const newScripts = [
       ...scripts,
       {
@@ -153,6 +162,60 @@ function JSRunnerPage() {
     setCode(scripts[idx].code);
     setName(scripts[idx].name);
   }
+  function handleUpload() {
+    const DocumentPicker = globalThis.nativeModuleProxy?.DocumentPicker;
+    if (!DocumentPicker) {
+      toasts.showToast("Paste URL-ul fisierului JS in campul de nume si dai Load URL", {
+        key: "info"
+      });
+      return;
+    }
+    DocumentPicker.pick({
+      type: [
+        "text/javascript",
+        "text/plain"
+      ]
+    }).then(function(res) {
+      const uri = res[0]?.uri;
+      if (!uri)
+        return;
+      fetch(uri).then(function(r) {
+        return r.text();
+      }).then(function(text) {
+        setCode(text);
+        const fname = res[0]?.name ?? "uploaded";
+        setName(fname.replace(/\.[^.]+$/, ""));
+        toasts.showToast("Fi\u0219ier \xEEnc\u0103rcat!", {
+          key: "success"
+        });
+      }).catch(function() {
+        return toasts.showToast("Nu am putut citi fi\u0219ierul", {
+          key: "danger"
+        });
+      });
+    }).catch(function() {
+    });
+  }
+  function handleLoadURL() {
+    if (!name.trim().startsWith("http")) {
+      toasts.showToast("Pune un URL in campul de nume!", {
+        key: "warning"
+      });
+      return;
+    }
+    fetch(name.trim()).then(function(r) {
+      return r.text();
+    }).then(function(text) {
+      setCode(text);
+      toasts.showToast("Incarcat de la URL!", {
+        key: "success"
+      });
+    }).catch(function() {
+      return toasts.showToast("Nu am putut incarca URL-ul", {
+        key: "danger"
+      });
+    });
+  }
   return /* @__PURE__ */ common.React.createElement(ScrollView, {
     style: styles.container,
     keyboardShouldPersistTaps: "handled"
@@ -160,7 +223,7 @@ function JSRunnerPage() {
     style: styles.title
   }, "\u{1F9EA} JS Runner"), /* @__PURE__ */ common.React.createElement(TextInput, {
     style: styles.nameInput,
-    placeholder: "Nume script...",
+    placeholder: "Nume script sau URL pentru Load URL...",
     placeholderTextColor: "#6d6f78",
     value: name,
     onChangeText: setName
@@ -191,7 +254,25 @@ function JSRunnerPage() {
     onPress: handleSave
   }, /* @__PURE__ */ common.React.createElement(Text, {
     style: styles.btnText
-  }, "\u{1F4BE} Save"))), output !== "" && /* @__PURE__ */ common.React.createElement(View, {
+  }, "\u{1F4BE} Save"))), /* @__PURE__ */ common.React.createElement(View, {
+    style: styles.row
+  }, /* @__PURE__ */ common.React.createElement(TouchableOpacity, {
+    style: [
+      styles.btn,
+      styles.btnUpload
+    ],
+    onPress: handleUpload
+  }, /* @__PURE__ */ common.React.createElement(Text, {
+    style: styles.btnText
+  }, "\u{1F4C1} Upload fi\u0219ier")), /* @__PURE__ */ common.React.createElement(TouchableOpacity, {
+    style: [
+      styles.btn,
+      styles.btnUpload
+    ],
+    onPress: handleLoadURL
+  }, /* @__PURE__ */ common.React.createElement(Text, {
+    style: styles.btnText
+  }, "\u{1F310} Load URL"))), output !== "" && /* @__PURE__ */ common.React.createElement(View, {
     style: styles.output
   }, /* @__PURE__ */ common.React.createElement(Text, {
     style: styles.outputText
