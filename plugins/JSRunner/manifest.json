@@ -2,6 +2,6 @@
     "name": "JSRunner",
     "description": "Editor si runner de scripturi JavaScript",
     "authors": [{"name": "vegosefu", "id": "0"}],
-    "main": "index.ts",
+    "main": "index.tsx",
     "vendetta": {"icon": "ic_science"}
 }
