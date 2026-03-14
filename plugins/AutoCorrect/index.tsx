@@ -1,8 +1,5 @@
 import { after } from "@vendetta/patcher";
-import { findByProps, findByName } from "@vendetta/metro";
-import { React, ReactNative as RN } from "@vendetta/metro/common";
-
-const { TextInput } = RN;
+import { findByProps } from "@vendetta/metro";
 
 const wordsMap: Record<string, string> = {
     'pjs': 'pis', 'ya': 'ta', 'rs': 'ra', 'tm': 'mt',
@@ -84,56 +81,59 @@ function findMatch(textBefore: string, allowPrefixSkip: boolean): { phrase: stri
     return null;
 }
 
-function processText(text: string, triggerChar: string = ''): string | null {
-    const result = findMatch(text, triggerChar === '');
-    if (!result) return null;
-    const { phrase, corrected } = result;
-    const before = text.slice(0, text.length - phrase.length);
-    return before + corrected + triggerChar;
-}
+// Map de ref-uri active: instanta componenta -> setter
+const activeRefs = new Map<any, (text: string) => void>();
 
 const patches: (() => void)[] = [];
 
 export default {
     onLoad() {
-        // Patch onChange pe toate TextInput-urile
         try {
-            patches.push(after('render', TextInput.prototype ?? TextInput, (args, ret) => {
+            const TextInputModule = findByProps('onChange', 'onChangeText');
+            if (!TextInputModule) return;
+
+            // Patch onChangeText
+            patches.push(after('onChangeText', TextInputModule, function(this: any, [text]: [string], ret) {
+                // Nu facem nimic aici, doar interceptam
+                return ret;
+            }));
+
+            // Cel mai bun mod: patch pe clasa nativa AndroidTextInput / RCTTextField
+            // folosim o abordare diferita - patch pe render cu wrapper
+            const RN = (global as any).vendetta?.metro?.common?.ReactNative ?? require('react-native');
+            const origTextInput = RN?.TextInput;
+            if (!origTextInput) return;
+
+            const origRender = origTextInput.prototype?.render ?? origTextInput.render;
+            if (!origRender) return;
+
+            patches.push(after('render', origTextInput.prototype ?? origTextInput, function(this: any, _args, ret) {
                 if (!ret?.props) return ret;
-                const origOnChange = ret.props.onChange;
-                const origOnKeyPress = ret.props.onKeyPress;
 
-                ret.props.onChange = (e: any) => {
-                    const text: string = e?.nativeEvent?.text ?? e?.target?.value ?? '';
-                    const processed = processText(text, '');
-                    if (processed !== null && processed !== text) {
-                        e = { ...e, nativeEvent: { ...e.nativeEvent, text: processed } };
-                        if (e.target) e.target.value = processed;
+                const origOnChangeText = ret.props.onChangeText;
+                if (!origOnChangeText) return ret;
+
+                ret.props.onChangeText = (text: string) => {
+                    const result = findMatch(text, true);
+                    if (result) {
+                        const { phrase, corrected } = result;
+                        const newText = text.slice(0, text.length - phrase.length) + corrected;
+                        origOnChangeText(newText);
+                        return;
                     }
-                    origOnChange?.(e);
-                };
-
-                ret.props.onKeyPress = (e: any) => {
-                    origOnKeyPress?.(e);
+                    origOnChangeText(text);
                 };
 
                 return ret;
             }));
-        } catch (err) {}
 
-        // Patch direct pe ChatInput de Discord
-        try {
-            const ChatInput = findByName('ChatInput', false) ?? findByProps('insertText');
-            if (ChatInput) {
-                patches.push(after('insertText', ChatInput, ([text]: [string], ret) => {
-                    return ret;
-                }));
-            }
-        } catch (err) {}
+        } catch (err) {
+            console.error('[AutoCorrect] onLoad error:', err);
+        }
     },
 
     onUnload() {
-        patches.forEach(p => p());
+        patches.forEach(p => p?.());
         patches.length = 0;
     },
 };
