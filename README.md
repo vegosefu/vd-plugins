@@ -4,6 +4,16 @@ This repo contains my plugins for [Revenge](https://github.com/revenge-mod).
 Plugins here *might* also work on other Vendetta based mods. Be aware that I only test plugins in the latest version of Revenge on Android.
 
 # Plugin list
+## [AutoCorrect](https://aliernfrog.github.io/vd-plugins/AutoCorrect)
+
+Autocorectare mesaje in Discord
+
+**Status:** ⛱️ Stable
+
+`https://aliernfrog.github.io/vd-plugins/AutoCorrect`
+
+<button onClick="navigator.clipboard.writeText('https://aliernfrog.github.io/vd-plugins/AutoCorrect')">📥 Copy install URL</button> <a href="https://github.com/aliernfrog/vd-plugins/tree/master/plugins/AutoCorrect"><button>🧪 Source code</button></a>
+
 ## [AutoNight](https://aliernfrog.github.io/vd-plugins/AutoNight)
 
 Automatically switches between midnight and light theme based on system theme.
