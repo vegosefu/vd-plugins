@@ -1,5 +1,4 @@
-(function(exports,patcher,metro,common){'use strict';const { TextInput } = common.ReactNative;
-const wordsMap = {
+(function(exports,patcher,metro){'use strict';const wordsMap = {
   "pjs": "pis",
   "ya": "ta",
   "rs": "ra",
@@ -210,60 +209,49 @@ function findMatch(textBefore, allowPrefixSkip) {
   }
   return null;
 }
-function processText(text, triggerChar = "") {
-  const result = findMatch(text, triggerChar === "");
-  if (!result)
-    return null;
-  const { phrase, corrected } = result;
-  const before = text.slice(0, text.length - phrase.length);
-  return before + corrected + triggerChar;
-}
 const patches = [];
 var index = {
   onLoad() {
     try {
-      patches.push(patcher.after("render", TextInput.prototype ?? TextInput, function(args, ret) {
+      const TextInputModule = metro.findByProps("onChange", "onChangeText");
+      if (!TextInputModule)
+        return;
+      patches.push(patcher.after("onChangeText", TextInputModule, function([text], ret) {
+        return ret;
+      }));
+      const RN = global.vendetta?.metro?.common?.ReactNative ?? require("react-native");
+      const origTextInput = RN?.TextInput;
+      if (!origTextInput)
+        return;
+      const origRender = origTextInput.prototype?.render ?? origTextInput.render;
+      if (!origRender)
+        return;
+      patches.push(patcher.after("render", origTextInput.prototype ?? origTextInput, function(_args, ret) {
         if (!ret?.props)
           return ret;
-        const origOnChange = ret.props.onChange;
-        const origOnKeyPress = ret.props.onKeyPress;
-        ret.props.onChange = function(e) {
-          const text = e?.nativeEvent?.text ?? e?.target?.value ?? "";
-          const processed = processText(text, "");
-          if (processed !== null && processed !== text) {
-            e = {
-              ...e,
-              nativeEvent: {
-                ...e.nativeEvent,
-                text: processed
-              }
-            };
-            if (e.target)
-              e.target.value = processed;
+        const origOnChangeText = ret.props.onChangeText;
+        if (!origOnChangeText)
+          return ret;
+        ret.props.onChangeText = function(text) {
+          const result = findMatch(text, true);
+          if (result) {
+            const { phrase, corrected } = result;
+            const newText = text.slice(0, text.length - phrase.length) + corrected;
+            origOnChangeText(newText);
+            return;
           }
-          origOnChange?.(e);
-        };
-        ret.props.onKeyPress = function(e) {
-          origOnKeyPress?.(e);
+          origOnChangeText(text);
         };
         return ret;
       }));
     } catch (err) {
-    }
-    try {
-      const ChatInput = metro.findByName("ChatInput", false) ?? metro.findByProps("insertText");
-      if (ChatInput) {
-        patches.push(patcher.after("insertText", ChatInput, function([text], ret) {
-          return ret;
-        }));
-      }
-    } catch (err) {
+      console.error("[AutoCorrect] onLoad error:", err);
     }
   },
   onUnload() {
     patches.forEach(function(p) {
-      return p();
+      return p?.();
     });
     patches.length = 0;
   }
-};exports.default=index;Object.defineProperty(exports,'__esModule',{value:true});return exports;})({},vendetta.patcher,vendetta.metro,vendetta.metro.common);
+};exports.default=index;Object.defineProperty(exports,'__esModule',{value:true});return exports;})({},vendetta.patcher,vendetta.metro);
