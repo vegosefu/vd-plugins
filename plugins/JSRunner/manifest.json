@@ -1,0 +1,7 @@
+{
+    "name": "JSRunner",
+    "description": "Editor si runner de scripturi JavaScript",
+    "authors": [{"name": "vegosefu", "id": "0"}],
+    "main": "index.js",
+    "vendetta": {"icon": "ic_science"}
+}
