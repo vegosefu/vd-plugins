@@ -34,6 +34,16 @@ Lets you use stickers without Nitro.
 
 <button onClick="navigator.clipboard.writeText('https://aliernfrog.github.io/vd-plugins/FreeStickers')">📥 Copy install URL</button> <a href="https://github.com/aliernfrog/vd-plugins/tree/master/plugins/FreeStickers"><button>🧪 Source code</button></a>
 
+## [JSRunner](https://aliernfrog.github.io/vd-plugins/JSRunner)
+
+Editor si runner de scripturi JavaScript
+
+**Status:** ⛱️ Stable
+
+`https://aliernfrog.github.io/vd-plugins/JSRunner`
+
+<button onClick="navigator.clipboard.writeText('https://aliernfrog.github.io/vd-plugins/JSRunner')">📥 Copy install URL</button> <a href="https://github.com/aliernfrog/vd-plugins/tree/master/plugins/JSRunner"><button>🧪 Source code</button></a>
+
 ## [JumpTo](https://aliernfrog.github.io/vd-plugins/JumpTo)
 
 Lets you jump to referenced messages and beginning of forum posts.
