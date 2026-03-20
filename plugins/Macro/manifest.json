@@ -1,0 +1,7 @@
+{
+    "name": "Macro",
+    "description": "Macro + AutoCorrect pentru Discord",
+    "authors": [{"name": "vegosefu", "id": "0"}],
+    "main": "index.tsx",
+    "vendetta": {"icon": "ic_robot"}
+}
