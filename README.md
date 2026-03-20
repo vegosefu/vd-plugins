@@ -64,6 +64,16 @@ Lets you jump to referenced messages and beginning of forum posts.
 
 <button onClick="navigator.clipboard.writeText('https://aliernfrog.github.io/vd-plugins/JumpTo')">📥 Copy install URL</button> <a href="https://github.com/aliernfrog/vd-plugins/tree/master/plugins/JumpTo"><button>🧪 Source code</button></a>
 
+## [Macro](https://aliernfrog.github.io/vd-plugins/Macro)
+
+Macro + AutoCorrect pentru Discord
+
+**Status:** ⛱️ Stable
+
+`https://aliernfrog.github.io/vd-plugins/Macro`
+
+<button onClick="navigator.clipboard.writeText('https://aliernfrog.github.io/vd-plugins/Macro')">📥 Copy install URL</button> <a href="https://github.com/aliernfrog/vd-plugins/tree/master/plugins/Macro"><button>🧪 Source code</button></a>
+
 ## [Stealmoji](https://aliernfrog.github.io/vd-plugins/Stealmoji) (fork)
 
 **Forked from: [Fierdetta/stealmoji](https://github.com/Fierdetta/stealmoji)**

@@ -162,6 +162,9 @@
     "CARD_SECONDARY_PRESSED_BG": [
       "#08080b"
     ],
+    "CHANNEL_BACKGROUND_DEFAULT": [
+      "#000000"
+    ],
     "CHANNEL_ICON": [
       "#818491"
     ],
@@ -213,6 +216,9 @@
     "CONTROL_CONNECTED_BACKGROUND_DEFAULT": [
       "#248045"
     ],
+    "CONTROL_CONNECTED_BORDER_ACTIVE": [
+      "#1f703c"
+    ],
     "CONTROL_CONNECTED_BORDER_DEFAULT": [
       "#23a55a"
     ],
@@ -225,6 +231,9 @@
     "CONTROL_CRITICAL_PRIMARY_BACKGROUND_DEFAULT": [
       "#da373c"
     ],
+    "CONTROL_CRITICAL_PRIMARY_BORDER_ACTIVE": [
+      "#bb3033"
+    ],
     "CONTROL_CRITICAL_PRIMARY_BORDER_DEFAULT": [
       "#da373c"
     ],
@@ -236,6 +245,12 @@
     ],
     "CONTROL_CRITICAL_SECONDARY_BACKGROUND_DEFAULT": [
       "#6c6f7c1f"
+    ],
+    "CONTROL_CRITICAL_SECONDARY_BORDER_ACTIVE": [
+      "#6c6f7c14"
+    ],
+    "CONTROL_CRITICAL_SECONDARY_BORDER_DEFAULT": [
+      "#6c6f7c14"
     ],
     "CONTROL_CRITICAL_SECONDARY_TEXT_DEFAULT": [
       "#fa777b"
@@ -279,8 +294,11 @@
     "CONTROL_PRIMARY_BACKGROUND_DEFAULT": [
       "#5865f2"
     ],
+    "CONTROL_PRIMARY_BORDER_ACTIVE": [
+      "#4752c4"
+    ],
     "CONTROL_PRIMARY_BORDER_DEFAULT": [
-      "#7984f5"
+      "#5865f2"
     ],
     "CONTROL_PRIMARY_TEXT_DEFAULT": [
       "#ffffff"
